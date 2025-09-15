@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>PhishGuard - Check Suspicious Links</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f2f5; }
+    header { background:#2c3e50; color:#fff; padding:20px; text-align:center; }
+    main { display:flex; flex-direction:column; align-items:center; padding:20px; }
+    .card { background:#fff; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1); padding:20px; width:90%; max-width:600px; margin:20px 0; }
+    input, button { padding:12px; margin:10px 0; width:100%; border-radius:6px; border:1px solid #ccc; font-size:16px; }
+    button { background:#3498db; color:#fff; cursor:pointer; border:none; font-weight:bold; }
+    button:hover { background:#2980b9; }
+    .safe { color:green; font-weight:bold; }
+    .phish { color:red; font-weight:bold; }
+    .medium { color:orange; font-weight:bold; }
+    .risk-meter { margin-top:10px; padding:10px; border-radius:6px; font-weight:bold; }
+    .Low { background:#d4edda; color:#155724; }
+    .Medium { background:#fff3cd; color:#856404; }
+    .High { background:#f8d7da; color:#721c24; }
+    ul { text-align:left; margin-top:10px; }
+    .history { margin-top:20px; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th, td { border:1px solid #ddd; padding:8px; text-align:center; }
+    th { background:#3498db; color:white; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PhishGuard 🔒</h1>
+    <p>Detect Safe vs Suspicious Links</p>
+  </header>
+  <main>
+    <div class="card">
+      <form method="POST">
+        <input type="text" name="url" placeholder="Enter website URL" required value="{{ url }}">
+        <button type="submit">🔍 Check Now</button>
+      </form>
+      {% if result %}
+        <h3 class="{{ 'phish' if result.label == 'Suspicious' else 'safe' }}">{{ result.message }}</h3>
+        <div class="risk-meter {{ result.risk_level }}">
+          Risk Level: {{ result.risk_level }} (Score: {{ result.score }})
+        </div>
+        {% if reasons %}
+          <h4>🔎 Reasons:</h4>
+          <ul>
+            {% for reason in reasons %}
+              <li>{{ reason }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    {% if history %}
+    <div class="card history">
+      <h3>📜 Recent Checks</h3>
+      <table>
+        <tr>
+          <th>Time</th>
+          <th>URL</th>
+          <th>Domain</th>
+          <th>Status</th>
+          <th>Score</th>
+        </tr>
+        {% for entry in history %}
+        <tr>
+          <td>{{ entry.time }}</td>
+          <td>{{ entry.url }}</td>
+          <td>{{ entry.domain }}</td>
+          <td>{{ entry.label }}</td>
+          <td>{{ entry.score }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endif %}
+  </main>
+</body>
+</html>
