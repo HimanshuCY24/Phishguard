@@ -79,6 +79,4 @@ Member 1 – Himanshu kumar singh
 Member 2- kapil bedre
 Member 3-Adish jain
 
-Member 2 – [Teammate’s Name]
 
-Member 3 – [Teammate’s Name]
